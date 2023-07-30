@@ -39,7 +39,19 @@ contract Lottery{
         return _pot;
     }
 
-    
+     /**
+     * @dev 배팅과 정답 체크를 한다. 유저는 0.005 ETH를 보내야 하고, 베팅용 1 byte 글자를 보낸다.
+     * 큐에 저장된 베팅 정보는 이후 distribute 함수에서 해결된다.
+     * @param challenges 유저가 베팅하는 글자
+     * @return result 함수가 수행되었는지 확인하는 bool 값
+     */
+    function betAndDistribute(bytes1 challenges) public payable returns (bool result) {
+            bet(challenges);
+
+            distribute();
+            
+            return true;        
+    }
     /**
      * @dev 배팅을 한다. 유저는 0.005 ETH를 보내야 하고, 베팅용 1 byte 글자를 보낸다.
      * 큐에 저장된 베팅 정보는 이후 distribute 함수에서 해결된다.
@@ -65,7 +77,7 @@ contract Lottery{
      * @dev 배팅 결과값을 확인하고 팟머니를 분배한다.
      * 정답 실패 : 팟 머니 축적, 정답 맞춤: 팟머니 획득, 한 글자 맞춤 or 정답 확인 불가 : 베팅 금액만 획득
      */
-    function Distribute() public {
+    function distribute() public {
          // head 3 4 5 6 7 8 10 tail
          uint256 cur;
          uint256 transferAmount; // <- 이벤트를 찍기위해 (실제 얼마가 전송이 되었는지 찍기위해)
